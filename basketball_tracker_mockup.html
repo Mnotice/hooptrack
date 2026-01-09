@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoopTrack - Basketball Training Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 24px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 24px;
+            min-height: 500px;
+        }
+
+        /* Workout View */
+        .workout-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .workout-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .workout-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Court Diagram */
+        .court-container {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .court-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .court {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background: #e67e22;
+            border-radius: 12px;
+            border: 3px solid #d35400;
+        }
+
+        .court-line {
+            position: absolute;
+            background: white;
+        }
+
+        .three-point-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border: 3px solid white;
+            border-radius: 50%;
+            border-right: none;
+        }
+
+        .key {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 50%;
+            border: 3px solid white;
+            border-bottom: none;
+        }
+
+        .rim {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .shot-zone {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(102, 126, 234, 0.3);
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shot-zone:hover {
+            background: rgba(102, 126, 234, 0.5);
+            transform: scale(1.1);
+        }
+
+        .shot-zone.selected {
+            background: #667eea;
+            color: white;
+            transform: scale(1.15);
+        }
+
+        /* Zone Positions */
+        .zone-top { top: 5%; left: 50%; transform: translateX(-50%); }
+        .zone-left-wing { top: 30%; left: 10%; }
+        .zone-right-wing { top: 30%; right: 10%; }
+        .zone-left-corner { bottom: 10%; left: 5%; }
+        .zone-right-corner { bottom: 10%; right: 5%; }
+
+        /* Shot Buttons */
+        .shot-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .shot-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shot-btn-make {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .shot-btn-make:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .shot-btn-miss {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .shot-btn-miss:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(235, 51, 73, 0.4);
+        }
+
+        .shot-count {
+            font-size: 24px;
+        }
+
+        /* Voice Button */
+        .voice-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .voice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .voice-button.listening {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Session Summary */
+        .session-summary {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .percentage-good {
+            color: #11998e;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Progress View */
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        /* Heat Map */
+        .heat-map {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .heat-cell {
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .heat-cell-label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .heat-cell-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .heat-hot { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .heat-warm { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .heat-cold { background: #f0f0f0; color: #666; }
+
+        /* Microphone Icon */
+        .mic-icon {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏀 HoopTrack</h1>
+            <p>Track Your Path to Excellence</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('workout')">Workout</div>
+            <div class="tab" onclick="showTab('progress')">Progress</div>
+            <div class="tab" onclick="showTab('history')">History</div>
+        </div>
+
+        <!-- WORKOUT TAB -->
+        <div id="workout-tab" class="content">
+            <div class="workout-header">
+                <div class="workout-title">Mid-Range Shooting</div>
+                <div class="workout-stats">
+                    <div class="stat">⏱️ 12:34</div>
+                    <div class="stat">🎯 45 shots</div>
+                    <div class="stat">📊 62%</div>
+                </div>
+            </div>
+
+            <button class="voice-button" onclick="toggleVoice()">
+                <svg class="mic-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+                <span id="voice-text">Tap to use voice commands</span>
+            </button>
+
+            <div class="court-container">
+                <div class="court-label">Select Shot Location</div>
+                <div class="court">
+                    <div class="three-point-line"></div>
+                    <div class="key"></div>
+                    <div class="rim"></div>
+                    
+                    <div class="shot-zone zone-top" onclick="selectZone(this)">
+                        <span>TOP<br>0/0</span>
+                    </div>
+                    <div class="shot-zone zone-left-wing" onclick="selectZone(this)">
+                        <span>LEFT<br>0/0</span>
+                    </div>
+                    <div class="shot-zone zone-right-wing selected" onclick="selectZone(this)">
+                        <span>RIGHT<br>14/20</span>
+                    </div>
+                    <div class="shot-zone zone-left-corner" onclick="selectZone(this)">
+                        <span>LC<br>0/0</span>
+                    </div>
+                    <div class="shot-zone zone-right-corner" onclick="selectZone(this)">
+                        <span>RC<br>0/0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shot-buttons">
+                <button class="shot-btn shot-btn-make" onclick="logShot('make')">
+                    <div class="shot-count">14</div>
+                    <div>MAKE ✓</div>
+                </button>
+                <button class="shot-btn shot-btn-miss" onclick="logShot('miss')">
+                    <div class="shot-count">6</div>
+                    <div>MISS ✗</div>
+                </button>
+            </div>
+
+            <div class="session-summary">
+                <div class="summary-row">
+                    <span class="summary-label">Current Zone</span>
+                    <span class="summary-value">Right Wing</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Zone Percentage</span>
+                    <span class="summary-value percentage-good">70%</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Session Total</span>
+                    <span class="summary-value">28/45 (62%)</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn">Pause</button>
+                <button class="action-btn action-btn-primary">End Session</button>
+            </div>
+        </div>
+
+        <!-- PROGRESS TAB -->
+        <div id="progress-tab" class="content" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Weekly Shots</span>
+                    <span class="stat-card-value">547</span>
+                </div>
+                <div style="font-size: 13px; color: #11998e; font-weight: 600;">↑ 12% from last week</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 91%;"></div>
+                </div>
+                <div style="font-size: 12px; color: #999; margin-top: 4px;">Goal: 600 shots/week</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Mid-Range %</span>
+                    <span class="stat-card-value">67%</span>
+                </div>
+                <div style="font-size: 13px; color: #11998e; font-weight: 600;">↑ 5% from last week</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 67%;"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Three-Point %</span>
+                    <span class="stat-card-value">28%</span>
+                </div>
+                <div style="font-size: 13px; color: #eb3349; font-weight: 600;">↓ 2% from last week</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 28%;"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-title" style="margin-bottom: 12px;">Shot Heat Map</div>
+                <div class="heat-map">
+                    <div class="heat-cell heat-cold">
+                        <div class="heat-cell-label">L Corner</div>
+                        <div class="heat-cell-value">45%</div>
+                    </div>
+                    <div class="heat-cell heat-warm">
+                        <div class="heat-cell-label">Top</div>
+                        <div class="heat-cell-value">58%</div>
+                    </div>
+                    <div class="heat-cell heat-hot">
+                        <div class="heat-cell-label">R Corner</div>
+                        <div class="heat-cell-value">72%</div>
+                    </div>
+                    <div class="heat-cell heat-warm">
+                        <div class="heat-cell-label">L Wing</div>
+                        <div class="heat-cell-value">61%</div>
+                    </div>
+                    <div class="heat-cell heat-hot">
+                        <div class="heat-cell-label">Key</div>
+                        <div class="heat-cell-value">78%</div>
+                    </div>
+                    <div class="heat-cell heat-hot">
+                        <div class="heat-cell-label">R Wing</div>
+                        <div class="heat-cell-value">69%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="history-tab" class="content" style="display: none;">
+            <div class="stat-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">Mid-Range Session</div>
+                        <div style="font-size: 13px; color: #999;">Today, 6:45 PM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700; color: #11998e;">67%</div>
+                        <div style="font-size: 13px; color: #666;">150 shots</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">Three-Point Work</div>
+                        <div style="font-size: 13px; color: #999;">Yesterday, 5:30 PM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700; color: #f5576c;">31%</div>
+                        <div style="font-size: 13px; color: #666;">100 shots</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">Form Shooting</div>
+                        <div style="font-size: 13px; color: #999;">2 days ago, 7:00 PM</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 24px; font-weight: 700; color: #11998e;">82%</div>
+                        <div style="font-size: 13px; color: #666;">75 shots</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('workout-tab').style.display = 'none';
+            document.getElementById('progress-tab').style.display = 'none';
+            document.getElementById('history-tab').style.display = 'none';
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+
+            // Update active tab styling
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function selectZone(element) {
+            document.querySelectorAll('.shot-zone').forEach(zone => {
+                zone.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function logShot(result) {
+            console.log('Shot logged:', result);
+            // Animation feedback
+            const btn = event.target.closest('.shot-btn');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        function toggleVoice() {
+            isListening = !isListening;
+            const btn = document.querySelector('.voice-button');
+            const text = document.getElementById('voice-text');
+            
+            if (isListening) {
+                btn.classList.add('listening');
+                text.textContent = '🎤 Listening...';
+            } else {
+                btn.classList.remove('listening');
+                text.textContent = 'Tap to use voice commands';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+/* Progress Tab */
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Overall Stats */
+.overall-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-card.large {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-card.large .stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.stat-card.large .stat-value {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.stat-card.large .stat-detail {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Week Section */
+.week-section {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.week-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-title svg {
+  color: #667eea;
+}
+
+/* Shot Volume */
+.shot-volume {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.volume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.volume-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.volume-count {
+  font-size: 16px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+
+/* Shooting Stats */
+.shooting-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.shooting-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.shooting-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shooting-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.shooting-card.comparison.positive .shooting-value {
+  color: #11998e;
+}
+
+.shooting-card.comparison.negative .shooting-value {
+  color: #eb3349;
+}
+
+.no-week-data {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Zone Heat Map */
+.zone-heatmap-section {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+.zone-heatmap-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 10px;
+}
+
+.heatmap-item {
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s;
+}
+
+.heatmap-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Heat map colors */
+.heatmap-item.color-green {
+  background: #e8f5e9;
+  border: 2px solid #11998e;
+}
+
+.heatmap-item.color-yellow {
+  background: #fffde7;
+  border: 2px solid #f9a825;
+}
+
+.heatmap-item.color-red {
+  background: #ffebee;
+  border: 2px solid #eb3349;
+}
+
+.heatmap-zone-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.heatmap-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.heatmap-item.color-green .heatmap-value {
+  color: #11998e;
+}
+
+.heatmap-item.color-yellow .heatmap-value {
+  color: #f9a825;
+}
+
+.heatmap-item.color-red .heatmap-value {
+  color: #eb3349;
+}
+
+.heatmap-detail {
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
+}
+
+.heatmap-empty {
+  font-size: 11px;
+  color: #ccc;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Heat map Legend */
+.heatmap-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-color.green {
+  background: #11998e;
+}
+
+.legend-color.yellow {
+  background: #f9a825;
+}
+
+.legend-color.red {
+  background: #eb3349;
+}
+
+.legend-label {
+  font-weight: 500;
+}
+
+/* Week Comparison */
+.week-comparison {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+.comparison-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.comparison-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.comparison-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comparison-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comparison-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .progress-container {
+    gap: 16px;
+  }
+
+  .heatmap-grid {
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+    gap: 8px;
+  }
+
+  .heatmap-legend {
+    gap: 12px;
+  }
+
+  .comparison-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card.large .stat-value {
+    font-size: 36px;
+  }
+
+  .shooting-stats {
+    grid-template-columns: 1fr;
+  }
+}
