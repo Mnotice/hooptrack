@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import Court from './Court'
 import VoiceRecognition from './VoiceRecognition'
-import InputBlueprint from './InputBlueprint'
 import '../styles/WorkoutTab.css'
 
 export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) {
@@ -15,10 +14,6 @@ export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) 
   const handleMissShot = () => {
     onAddShot({ result: 'miss', zone: selectedZone, timestamp: Date.now() })
     setSelectedZone(null)
-  }
-
-  const handleVoiceShot = (shot) => {
-    onAddShot(shot)
   }
 
   const makes = currentSession.shots.filter(s => s.result === 'make').length
@@ -47,13 +42,6 @@ export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) 
         selectedZone={selectedZone}
         onZoneSelect={setSelectedZone}
         shots={currentSession.shots}
-      />
-
-      <InputBlueprint />
-
-      <VoiceRecognition 
-        onShotLogged={handleVoiceShot}
-        onSessionEnded={onEndSession}
       />
 
       <div className="shot-buttons">

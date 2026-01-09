@@ -35,6 +35,65 @@
   font-size: 24px;
 }
 
+/* Shot Buttons */
+.shot-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.shot-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shot-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.shot-btn:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.shot-btn-make {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+}
+
+.shot-btn-make:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+}
+
+.shot-btn-miss {
+  background: linear-gradient(135deg, #eb3349, #f45c43);
+  color: white;
+}
+
+.shot-btn-miss:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(235, 51, 73, 0.4);
+}
+
+.shot-count {
+  font-size: 24px;
+
 /* Voice Button */
 .voice-button {
   width: 100%;
