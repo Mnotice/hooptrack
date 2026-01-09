@@ -24,12 +24,12 @@ body {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 20px 0;
+  width: 100%;
 }
 
 .container {
-  max-width: 430px;
   width: 100%;
+  max-width: 430px;
   background: white;
   border-radius: 30px;
   overflow: hidden;
@@ -42,6 +42,9 @@ body {
   color: white;
   padding: 40px 24px 30px;
   text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .header h1 {
@@ -55,11 +58,64 @@ body {
   opacity: 0.9;
 }
 
-/* Tab Navigation */
+/* Layout Wrapper - Responsive */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar Navigation - Hidden on Mobile */
+.sidebar {
+  display: none;
+  flex-direction: column;
+  background: white;
+  border-right: 1px solid #f0f0f0;
+  padding: 0;
+  min-width: 200px;
+  gap: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: 600;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: #f9f9f9;
+  color: #667eea;
+}
+
+.nav-item.active {
+  color: #667eea;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), transparent);
+  border-left-color: #667eea;
+}
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Tab Navigation - Mobile Bottom Tabs */
 .tabs {
   display: flex;
   background: white;
-  border-bottom: 2px solid #f0f0f0;
+  border-top: 2px solid #f0f0f0;
+  order: 2;
+  sticky: bottom;
 }
 
 .tab {
@@ -71,14 +127,14 @@ body {
   color: #999;
   cursor: pointer;
   transition: all 0.3s;
-  border-bottom: 3px solid transparent;
+  border-top: 3px solid transparent;
   background: none;
   border: none;
 }
 
 .tab.active {
   color: #667eea;
-  border-bottom-color: #667eea;
+  border-top-color: #667eea;
 }
 
 .tab:hover {
@@ -89,6 +145,106 @@ body {
 .content {
   padding: 24px;
   min-height: 500px;
-  max-height: 70vh;
+  max-height: calc(100vh - 300px);
   overflow-y: auto;
+  order: 1;
+  flex: 1;
+}
+
+/* Desktop Responsive (> 768px) */
+@media (min-width: 768px) {
+  body {
+    padding: 40px 20px;
+  }
+
+  #root {
+    padding: 40px 0;
+  }
+
+  .app-container {
+    max-width: 1400px;
+  }
+
+  .container {
+    max-width: 100%;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+  }
+
+  .header {
+    padding: 30px 40px;
+    text-align: left;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  /* Layout Wrapper for Desktop */
+  .layout-wrapper {
+    flex-direction: row;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Sidebar Visible on Desktop */
+  .sidebar {
+    display: flex;
+    min-width: 220px;
+    max-width: 220px;
+    background: linear-gradient(135deg, #f8f9fa, #fff);
+    border-right: 1px solid #e5e5e5;
+    padding: 20px 0;
+    gap: 0;
+  }
+
+  .nav-item {
+    padding: 20px 16px;
+    font-size: 13px;
+  }
+
+  .nav-item svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Hide Bottom Tabs on Desktop */
+  .tabs {
+    display: none;
+  }
+
+  /* Main Content Area for Desktop */
+  .main-content {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Content Area for Desktop */
+  .content {
+    padding: 40px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+}
+
+/* Large Desktop (> 1024px) */
+@media (min-width: 1024px) {
+  .container {
+    max-height: 90vh;
+  }
+
+  .content {
+    max-height: calc(90vh - 140px);
+  }
+
+  .header {
+    padding: 40px 50px;
+  }
 }

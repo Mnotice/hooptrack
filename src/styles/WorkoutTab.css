@@ -20,8 +20,9 @@
 }
 
 .workout-stats {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: auto;
+  gap: 12px;
   font-size: 14px;
 }
 
@@ -33,6 +34,32 @@
 
 .shot-count {
   font-size: 24px;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 768px) {
+  .workout-header {
+    padding: 30px;
+  }
+
+  .workout-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .workout-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .stat {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    text-align: center;
+  }
 }
 
 /* Shot Buttons */
