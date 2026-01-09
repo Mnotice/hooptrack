@@ -20,6 +20,7 @@
   border-radius: 12px;
   border: 3px solid #d35400;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Court Line Elements */
@@ -34,6 +35,7 @@
   border-radius: 50%;
   border-right: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 .key {
@@ -46,6 +48,7 @@
   border: 3px solid white;
   border-bottom: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 .rim {
@@ -61,175 +64,226 @@
   z-index: 5;
 }
 
-/* Shot Zones */
-.shot-zone {
+/* Zone Areas - Large Clickable Regions */
+.zone-area {
   position: absolute;
-  width: 70px;
-  height: 70px;
-  background: rgba(102, 126, 234, 0.25);
-  border: 2px solid #667eea;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  user-select: none;
-}
-
-.shot-zone:hover {
-  background: rgba(102, 126, 234, 0.4);
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.shot-zone.selected {
-  background: #667eea;
-  border-color: #667eea;
-  transform: scale(1.2);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
-}
-
-.shot-zone.selected .zone-label,
-.shot-zone.selected .zone-stats {
-  color: white;
-}
-
-/* Zone Content */
-.zone-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  text-align: center;
-  width: 100%;
-  height: 100%;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+  background: rgba(23, 64, 139, 0.05);
+  border: 2px solid transparent;
+  z-index: 2;
+}
+
+.zone-area:hover {
+  background: rgba(23, 64, 139, 0.15);
+  border-color: rgba(23, 64, 139, 0.3);
+}
+
+.zone-area.selected {
+  background: rgba(201, 8, 42, 0.2);
+  border-color: #c9082a;
+  box-shadow: inset 0 0 0 2px #c9082a, 0 0 12px rgba(201, 8, 42, 0.3);
 }
 
 .zone-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: #667eea;
+  color: #1d1d1d;
+  text-align: center;
+  line-height: 1.2;
   transition: color 0.3s;
 }
 
-.zone-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  font-weight: 700;
-  color: #667eea;
+.zone-area.selected .zone-label {
+  color: #c9082a;
+  font-weight: 800;
+}
+
+.zone-fraction {
   font-size: 11px;
+  font-weight: 600;
+  color: #666;
   transition: color 0.3s;
 }
 
-.zone-makes {
-  color: #11998e;
+.zone-area.selected .zone-fraction {
+  color: #c9082a;
+  font-weight: 700;
 }
 
-.shot-zone.selected .zone-makes {
-  color: white;
+/* Top Zone - Center top */
+.zone-top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 22%;
+  border-radius: 0 0 20px 20px;
 }
 
-.zone-slash {
-  color: #ccc;
-  font-weight: 600;
+/* Left Wing Zone - Upper left */
+.zone-left-wing {
+  top: 15%;
+  left: 0;
+  width: 28%;
+  height: 35%;
+  border-radius: 0 20px 0 0;
 }
 
-.zone-attempts {
-  color: #999;
+/* Right Wing Zone - Upper right */
+.zone-right-wing {
+  top: 15%;
+  right: 0;
+  width: 28%;
+  height: 35%;
+  border-radius: 20px 0 0 0;
+}
+
+/* Left Corner Zone - Bottom left */
+.zone-left-corner {
+  bottom: 0;
+  left: 0;
+  width: 28%;
+  height: 28%;
+  border-radius: 0 20px 0 0;
+}
+
+/* Right Corner Zone - Bottom right */
+.zone-right-corner {
+  bottom: 0;
+  right: 0;
+  width: 28%;
+  height: 28%;
+  border-radius: 20px 0 0 0;
 }
 
 /* Zone Statistics Summary */
 .zone-stats-summary {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa, #fff);
   border-radius: 16px;
   padding: 16px;
   margin-top: 8px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .zone-stats-summary h4 {
+  margin: 0 0 12px 0;
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: #1d1d1d;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
 .zone-stat-item {
   background: white;
+  border: 2px solid #e5e5e5;
   border-radius: 12px;
-  padding: 10px 8px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  border: 1px solid #f0f0f0;
-  transition: all 0.3s;
+  justify-content: center;
+  gap: 4px;
 }
 
 .zone-stat-item:hover {
-  border-color: #667eea;
-  background: #f8f9fa;
+  border-color: #17408b;
+  background: #f9f9f9;
+}
+
+.zone-stat-item.highlighted {
+  background: rgba(201, 8, 42, 0.08);
+  border-color: #c9082a;
 }
 
 .stat-zone-name {
   font-size: 11px;
   font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  color: #1d1d1d;
 }
 
 .stat-values {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2px;
+  align-items: center;
 }
 
 .stat-percentage {
-  font-size: 16px;
-  font-weight: 700;
-  color: #667eea;
+  font-size: 14px;
+  font-weight: 800;
+  color: #17408b;
 }
 
 .stat-fraction {
-  font-size: 11px;
+  font-size: 10px;
   color: #999;
   font-weight: 600;
 }
 
 .stat-empty {
-  font-size: 16px;
-  color: #ddd;
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 600;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-  .shot-zone {
-    width: 60px;
-    height: 60px;
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .court-label {
+    font-size: 16px;
+    margin-bottom: 12px;
   }
 
   .zone-label {
-    font-size: 11px;
+    font-size: 13px;
   }
 
-  .zone-stats {
-    font-size: 10px;
+  .zone-fraction {
+    font-size: 12px;
+  }
+
+  .zone-stats-summary {
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .zone-stats-summary h4 {
+    font-size: 16px;
+    margin-bottom: 16px;
   }
 
   .stats-grid {
-    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .zone-stat-item {
+    padding: 16px 12px;
+  }
+
+  .stat-zone-name {
+    font-size: 12px;
+  }
+
+  .stat-percentage {
+    font-size: 16px;
+  }
+
+  .stat-fraction {
+    font-size: 11px;
   }
 }
