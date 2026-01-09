@@ -1,15 +1,33 @@
-import { Trash2, Calendar, Target } from 'lucide-react'
+import { useState } from 'react'
+import { Trash2, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
 import '../styles/HistoryTab.css'
 
 export default function HistoryTab({ sessions, onDeleteSession }) {
+  const [expandedSession, setExpandedSession] = useState(null)
+
   const formatDate = (timestamp) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
+    })
+  }
+
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
+      hour12: true,
     })
+  }
+
+  const getSessionDuration = (session) => {
+    if (session.shots.length === 0) return '0 min'
+    const firstShotTime = session.shots[0].timestamp
+    const lastShotTime = session.shots[session.shots.length - 1].timestamp
+    const durationMs = lastShotTime - firstShotTime
+    const minutes = Math.round(durationMs / 60000)
+    return minutes > 0 ? `${minutes} min` : '< 1 min'
   }
 
   const getSessionStats = (session) => {
@@ -18,6 +36,32 @@ export default function HistoryTab({ sessions, onDeleteSession }) {
     const percentage = total > 0 ? Math.round((makes / total) * 100) : 0
     return { makes, misses: total - makes, total, percentage }
   }
+
+  const getZoneStats = (session) => {
+    const zones = ['top', 'left-wing', 'right-wing', 'left-corner', 'right-corner']
+    return zones.map(zone => {
+      const zoneShots = session.shots.filter(s => s.zone === zone)
+      const zoneMakes = zoneShots.filter(s => s.result === 'make').length
+      const zonePercentage = zoneShots.length > 0 ? Math.round((zoneMakes / zoneShots.length) * 100) : 0
+      return {
+        zone,
+        name: zone === 'top' ? 'Top/Key' : zone.replace('-', ' '),
+        makes: zoneMakes,
+        attempts: zoneShots.length,
+        percentage: zonePercentage,
+      }
+    }).filter(z => z.attempts > 0)
+  }
+
+  const determineSessionType = (session) => {
+    if (session.shots.length === 0) return 'Empty'
+    const percentage = getSessionStats(session).percentage
+    if (percentage >= 70) return 'Hot 🔥'
+    if (percentage >= 50) return 'Good ✓'
+    return 'Cold ❄️'
+  }
+
+  const sortedSessions = [...sessions].reverse()
 
   return (
     <div className="history-container">
@@ -30,64 +74,119 @@ export default function HistoryTab({ sessions, onDeleteSession }) {
         </div>
       ) : (
         <div className="sessions-list">
-          {[...sessions].reverse().map((session, index) => {
+          {sortedSessions.map((session, index) => {
             const stats = getSessionStats(session)
-            const sessionIndex = sessions.length - index
+            const sessionType = determineSessionType(session)
+            const isExpanded = expandedSession === session.id
+            const zoneStats = getZoneStats(session)
+            const duration = getSessionDuration(session)
 
             return (
               <div key={session.id} className="session-card">
-                <div className="session-header">
-                  <div className="session-info">
-                    <h3 className="session-date">
-                      <Calendar size={18} />
-                      {formatDate(session.startTime)}
-                    </h3>
-                    <span className="session-label">Session #{sessionIndex}</span>
-                  </div>
-                  <button
-                    className="delete-btn"
-                    onClick={() => onDeleteSession(session.id)}
-                    title="Delete session"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+                <button
+                  className="session-card-button"
+                  onClick={() => setExpandedSession(isExpanded ? null : session.id)}
+                >
+                  <div className="session-header">
+                    <div className="session-main-info">
+                      <div className="session-type-badge">{sessionType}</div>
+                      <div className="session-date-time">
+                        <h3 className="session-date">
+                          <Calendar size={16} />
+                          {formatDate(session.startTime)}
+                        </h3>
+                        <span className="session-time">{formatTime(session.startTime)}</span>
+                      </div>
+                    </div>
 
-                <div className="session-stats">
-                  <div className="stat-box">
-                    <span className="stat-label">Makes</span>
-                    <span className="stat-number makes">{stats.makes}</span>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-label">Misses</span>
-                    <span className="stat-number misses">{stats.misses}</span>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-label">Total</span>
-                    <span className="stat-number">{stats.total}</span>
-                  </div>
-                  <div className="stat-box highlight">
-                    <span className="stat-label">FG%</span>
-                    <span className="stat-number percentage">{stats.percentage}%</span>
-                  </div>
-                </div>
+                    <div className="session-quick-stats">
+                      <div className="quick-stat">
+                        <span className="quick-value">{stats.total}</span>
+                        <span className="quick-label">shots</span>
+                      </div>
+                      <div className="quick-stat highlight">
+                        <span className="quick-value">{stats.percentage}%</span>
+                        <span className="quick-label">FG%</span>
+                      </div>
+                    </div>
 
-                {session.shots.length > 0 && (
-                  <div className="shots-breakdown">
-                    <div className="breakdown-title">Shot Details</div>
-                    <div className="zone-breakdown-mini">
-                      {['top', 'left-wing', 'right-wing', 'left-corner', 'right-corner'].map(zone => {
-                        const zoneShots = session.shots.filter(s => s.zone === zone)
-                        if (zoneShots.length === 0) return null
+                    <div className="expand-icon">
+                      {isExpanded ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                    </div>
+                  </div>
+                </button>
 
-                        const zoneMakes = zoneShots.filter(s => s.result === 'make').length
-                        return (
-                          <div key={zone} className="zone-mini-item">
-                            <span className="zone-mini-name">{zone.split('-')[0][0].toUpperCase()}</span>
-                            <span className="zone-mini-stat">{zoneMakes}/{zoneShots.length}</span>
-                          </div>
-                        )
-                      })}
+                {/* Expanded Details */}
+                {isExpanded && (
+                  <div className="session-expanded">
+                    <div className="expanded-divider"></div>
+
+                    {/* Detailed Stats */}
+                    <div className="detailed-stats">
+                      <div className="stat-row">
+                        <span className="stat-row-label">Makes</span>
+                        <span className="stat-row-value makes">{stats.makes}</span>
+                      </div>
+                      <div className="stat-row">
+                        <span className="stat-row-label">Misses</span>
+                        <span className="stat-row-value misses">{stats.misses}</span>
+                      </div>
+                      <div className="stat-row">
+                        <span className="stat-row-label">Duration</span>
+                        <span className="stat-row-value">{duration}</span>
+                      </div>
+                      <div className="stat-row">
+                        <span className="stat-row-label">Field Goal %</span>
+                        <span className="stat-row-value percentage">{stats.percentage}%</span>
+                      </div>
+                    </div>
+
+                    {/* Zone Breakdown */}
+                    {zoneStats.length > 0 && (
+                      <div className="zone-breakdown-section">
+                        <h4 className="breakdown-title">Zone Performance</h4>
+                        <div className="zone-stats-grid">
+                          {zoneStats.map(zone => (
+                            <div key={zone.zone} className="zone-stat-card">
+                              <div className="zone-header">
+                                <span className="zone-name">{zone.name}</span>
+                                <span className="zone-percent">{zone.percentage}%</span>
+                              </div>
+                              <div className="zone-fraction">{zone.makes}/{zone.attempts}</div>
+                              <div className="zone-bar">
+                                <div
+                                  className="zone-bar-fill"
+                                  style={{
+                                    width: `${zone.percentage}%`,
+                                    backgroundColor:
+                                      zone.percentage >= 65
+                                        ? '#11998e'
+                                        : zone.percentage >= 45
+                                        ? '#f9a825'
+                                        : '#eb3349',
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="session-actions">
+                      <button
+                        className="delete-session-btn"
+                        onClick={() => onDeleteSession(session.id)}
+                        title="Delete this session"
+                      >
+                        <Trash2 size={16} />
+                        Delete Session
+                      </button>
                     </div>
                   </div>
                 )}
@@ -99,7 +198,14 @@ export default function HistoryTab({ sessions, onDeleteSession }) {
 
       {sessions.length > 0 && (
         <div className="history-footer">
-          <p>Total Sessions: <strong>{sessions.length}</strong></p>
+          <div className="footer-stat">
+            <span className="footer-label">Total Sessions:</span>
+            <span className="footer-value">{sessions.length}</span>
+          </div>
+          <div className="footer-stat">
+            <span className="footer-label">Total Shots:</span>
+            <span className="footer-value">{sessions.flatMap(s => s.shots).length}</span>
+          </div>
         </div>
       )}
     </div>
