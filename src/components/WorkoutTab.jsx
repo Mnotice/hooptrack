@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Court from './Court'
-import VoiceRecognition from './VoiceRecognition'
+import VoiceControl from './VoiceControl'
 import { Target, Flame, BarChart3 } from 'lucide-react'
 import '../styles/WorkoutTab.css'
 
@@ -43,6 +43,14 @@ export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) 
         selectedZone={selectedZone}
         onZoneSelect={setSelectedZone}
         shots={currentSession.shots}
+      />
+
+      <VoiceControl
+        selectedZone={selectedZone}
+        onZoneSelect={setSelectedZone}
+        currentSession={currentSession}
+        onAddShot={onAddShot}
+        onEndSession={onEndSession}
       />
 
       <div className="shot-buttons">

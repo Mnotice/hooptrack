@@ -1,0 +1,267 @@
+/* Voice Control Styling */
+
+.voice-control {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+/* Voice Button Styles */
+.voice-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-btn:hover {
+  background: linear-gradient(135deg, #e8e8e8 0%, #e0e0e0 100%);
+  border-color: #d0d0d0;
+}
+
+/* Active Listening State */
+.voice-btn-active {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  color: white;
+  border-color: #1565C0;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.voice-btn-active:hover {
+  background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+/* Listening State with Pulse */
+.voice-btn-listening {
+  background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+  color: white;
+  border-color: #6A1B9A;
+  animation: voicePulse 1.5s ease-in-out infinite;
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.4);
+}
+
+/* Processing State */
+.voice-btn-processing {
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  color: white;
+  border-color: #E65100;
+  animation: voiceSpinner 1s linear infinite;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+/* Error State */
+.voice-btn-error {
+  background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+  color: white;
+  border-color: #C62828;
+  animation: voiceShake 0.5s ease-in-out;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+/* Pulse Animation for Listening */
+@keyframes voicePulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(156, 39, 176, 0.7);
+  }
+}
+
+/* Spinner Animation for Processing */
+@keyframes voiceSpinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.voice-btn-processing {
+  animation: voiceSpinner 1s linear infinite;
+}
+
+/* Shake Animation for Error */
+@keyframes voiceShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Pulse Dot Animation */
+.voice-pulse {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #FFC107;
+  border-radius: 50%;
+  top: 12px;
+  right: 12px;
+  animation: voicePulseDot 1.5s ease-in-out infinite;
+}
+
+@keyframes voicePulseDot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(255, 193, 7, 0);
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    opacity: 0;
+  }
+}
+
+/* Voice Button Text */
+.voice-btn-text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Feedback Message */
+.voice-feedback {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+  border-left: 4px solid #4CAF50;
+  border-radius: 6px;
+  color: #2E7D32;
+  font-size: 13px;
+  font-weight: 500;
+  animation: voiceFeedbackSlide 0.3s ease-out;
+}
+
+@keyframes voiceFeedbackSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Transcript Display */
+.voice-transcript {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #F3E5F5 0%, #EDE7F6 100%);
+  border-left: 4px solid #9C27B0;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6A1B9A;
+}
+
+.voice-final {
+  display: block;
+  margin-bottom: 4px;
+  color: #7B1FA2;
+  font-weight: 500;
+}
+
+.voice-interim {
+  display: block;
+  color: #9C27B0;
+  font-style: italic;
+  opacity: 0.7;
+  animation: voiceInterimBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes voiceInterimBlink {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .voice-control {
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .voice-btn {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+
+  .voice-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .voice-pulse {
+    width: 7px;
+    height: 7px;
+    top: 11px;
+    right: 11px;
+  }
+
+  .voice-feedback,
+  .voice-transcript {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Accessibility */
+.voice-btn:focus {
+  outline: 2px solid var(--primary-color, #2196F3);
+  outline-offset: 2px;
+}
+
+.voice-btn:active {
+  transform: scale(0.98);
+}
+
+/* Dark Mode Support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  .voice-btn {
+    background: linear-gradient(135deg, #424242 0%, #303030 100%);
+    color: #e0e0e0;
+    border-color: #555;
+  }
+
+  .voice-btn:hover {
+    background: linear-gradient(135deg, #505050 0%, #424242 100%);
+    border-color: #666;
+  }
+
+  .voice-feedback {
+    background: linear-gradient(135deg, #1B5E20 0%, #245D20 100%);
+    border-left-color: #66BB6A;
+    color: #81C784;
+  }
+
+  .voice-transcript {
+    background: linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%);
+    border-left-color: #CE93D8;
+    color: #E1BEE7;
+  }
+}
