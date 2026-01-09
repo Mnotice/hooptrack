@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Court from './Court'
 import VoiceRecognition from './VoiceRecognition'
+import { Target, Flame, BarChart3 } from 'lucide-react'
 import '../styles/WorkoutTab.css'
 
 export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) {
@@ -64,17 +65,34 @@ export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) 
       </div>
 
       <div className="session-summary">
-        <div className="summary-row">
-          <span>Total Shots</span>
-          <span className="summary-value">{total}</span>
+        <div className="stat-card">
+          <div className="stat-icon makes-icon">
+            <Target size={28} />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{makes}</div>
+            <div className="stat-label">Makes</div>
+          </div>
         </div>
-        <div className="summary-row">
-          <span>Field Goal %</span>
-          <span className="summary-value">{percentage}%</span>
+
+        <div className="stat-card">
+          <div className="stat-icon flames-icon">
+            <Flame size={28} />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{percentage}</div>
+            <div className="stat-label">FG%</div>
+          </div>
         </div>
-        <div className="summary-row">
-          <span>Shooting Streak</span>
-          <span className="summary-value">{currentSession.shots.length > 0 ? 'In Progress' : 'Not Started'}</span>
+
+        <div className="stat-card">
+          <div className="stat-icon shots-icon">
+            <BarChart3 size={28} />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{total}</div>
+            <div className="stat-label">Total</div>
+          </div>
         </div>
       </div>
 

@@ -1,3 +1,14 @@
+/* NBA Color Palette */
+:root {
+  --nba-navy: #17408b;
+  --nba-red: #c9082a;
+  --nba-gold: #fdb927;
+  --nba-orange: #e56020;
+  --nba-green: #00843d;
+  --nba-dark: #1d1d1d;
+  --nba-light: #f5f5f5;
+}
+
 /* Workout View */
 .workout-container {
   display: flex;
@@ -6,17 +17,19 @@
 }
 
 .workout-header {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, var(--nba-navy) 0%, #0d2852 100%);
   padding: 20px;
   border-radius: 16px;
   color: white;
   margin-bottom: 8px;
+  box-shadow: 0 4px 15px rgba(23, 64, 139, 0.2);
 }
 
 .workout-title {
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 12px;
+  letter-spacing: 0.5px;
 }
 
 .workout-stats {
@@ -34,32 +47,6 @@
 
 .shot-count {
   font-size: 24px;
-}
-
-/* Responsive breakpoints */
-@media (min-width: 768px) {
-  .workout-header {
-    padding: 30px;
-  }
-
-  .workout-title {
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
-
-  .workout-stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  .stat {
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    text-align: center;
-  }
 }
 
 /* Shot Buttons */
@@ -99,33 +86,150 @@
 }
 
 .shot-btn-make {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
+  background: linear-gradient(135deg, var(--nba-green) 0%, #005a2f 100%);
   color: white;
 }
 
 .shot-btn-make:not(:disabled):hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 132, 61, 0.4);
 }
 
 .shot-btn-miss {
-  background: linear-gradient(135deg, #eb3349, #f45c43);
+  background: linear-gradient(135deg, var(--nba-red) 0%, #9a0621 100%);
   color: white;
 }
 
 .shot-btn-miss:not(:disabled):hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(235, 51, 73, 0.4);
+  box-shadow: 0 8px 20px rgba(201, 8, 42, 0.4);
 }
 
-.shot-count {
-  font-size: 24px;
+/* Session Summary - NBA Stat Cards */
+.session-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  border-left: 4px solid var(--nba-navy);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.makes-icon {
+  background: linear-gradient(135deg, var(--nba-green) 0%, #005a2f 100%);
+}
+
+.flames-icon {
+  background: linear-gradient(135deg, var(--nba-orange) 0%, #c94a1a 100%);
+}
+
+.shots-icon {
+  background: linear-gradient(135deg, var(--nba-navy) 0%, #0d2852 100%);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--nba-dark);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* End Session Button - NBA Inspired */
+.end-session-btn {
+  width: 100%;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--nba-red) 0%, #9a0621 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(201, 8, 42, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.end-session-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.end-session-btn:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(201, 8, 42, 0.4);
+}
+
+.end-session-btn:not(:disabled):hover::before {
+  left: 100%;
+}
+
+.end-session-btn:not(:disabled):active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 8, 42, 0.3);
+}
+
+.end-session-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
 
 /* Voice Button */
 .voice-button {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--nba-navy) 0%, #0d2852 100%);
   color: white;
   border: none;
   border-radius: 16px;
@@ -142,11 +246,11 @@
 
 .voice-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(23, 64, 139, 0.4);
 }
 
 .voice-button.listening {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, var(--nba-red) 0%, #9a0621 100%);
   animation: pulse 1.5s infinite;
 }
 
@@ -159,52 +263,70 @@
   }
 }
 
-/* Session Summary */
-.session-summary {
-  background: #f8f9fa;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
+/* Responsive Design */
+@media (min-width: 768px) {
+  .workout-header {
+    padding: 30px;
+  }
 
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
-  color: #666;
-}
+  .workout-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
 
-.summary-row:last-child {
-  border-bottom: none;
-}
+  .workout-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 
-.summary-value {
-  font-weight: 600;
-  color: #333;
-}
+  .stat {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    text-align: center;
+  }
 
-/* End Session Button */
-.end-session-btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+  /* Session Summary Grid - 3 Columns on Desktop */
+  .session-summary {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 
-.end-session-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
+  .stat-card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 24px 16px;
+    border-left: none;
+    border-top: 4px solid var(--nba-navy);
+  }
 
-.end-session-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  .stat-card:nth-child(2) {
+    border-top-color: var(--nba-orange);
+  }
+
+  .stat-card:nth-child(3) {
+    border-top-color: var(--nba-navy);
+  }
+
+  .stat-icon {
+    width: 64px;
+    height: 64px;
+    align-self: center;
+  }
+
+  .stat-content {
+    align-items: center;
+  }
+
+  .stat-number {
+    font-size: 36px;
+  }
+
+  .end-session-btn {
+    padding: 24px 32px;
+    font-size: 20px;
+  }
 }
