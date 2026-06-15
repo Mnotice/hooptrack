@@ -58,9 +58,15 @@
 
 ---
 
-**Browser Support:** Chrome, Edge, Safari, Firefox  
-**Privacy:** No audio stored or recorded - local recognition only  
-**Fallback:** Manual buttons always available
+**Browser Support:**
+- ✅ Chrome & Edge (desktop + Android) — full support
+- ✅ Safari (macOS) — supported
+- ⚠️ Safari (iPhone/iPad, in browser) — limited; tap to speak may stop after each phrase
+- ❌ Installed PWA on iPhone/iPad — not supported (use Safari in browser, or manual buttons)
+- ❌ Firefox — not supported (Web Speech API unavailable)
+
+**Privacy:** No audio stored or recorded — local recognition only  
+**Fallback:** Manual Make/Miss buttons always available
 
 ---
 

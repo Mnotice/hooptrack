@@ -1,158 +1,63 @@
-# 🏀 HoopTrack - Basketball Shot Tracker
+# HoopTrack
 
-A professional basketball training analytics app that helps players track their shooting performance in real-time.
+Free basketball shot tracker for practice sessions. Log makes and misses by court zone, see your stats, and install it on your phone as an app — no account required.
 
-## Overview
-
-HoopTrack is a responsive web application designed for basketball players to log their shots during training sessions, analyze performance across different court zones, and track progress over time. With an intuitive interface optimized for both mobile and desktop, players can immediately see their shooting statistics and identify areas for improvement.
-
-## ✨ Key Features
-
-### 📊 Real-Time Shot Tracking
-- **5 Court Zones:** Log shots from Top, Left Wing, Right Wing, Left Corner, and Right Corner
-- **Large Clickable Areas:** Easy-to-tap zone selection optimized for mobile devices
-- **Instant Feedback:** See your makes, misses, and FG% in real-time
-- **Make/Miss Buttons:** Green (make) and red (miss) buttons with NBA color scheme
-
-### 📈 Performance Analytics
-- **Zone Statistics:** Detailed makes/misses breakdown by zone
-- **Color-Coded Performance:** Green (≥65%), Yellow (45-65%), Red (<45%)
-- **Weekly Trends:** Track progress week-over-week
-- **Heat Maps:** Visual representation of shooting zones colored by performance
-
-### 📱 Responsive Design
-- **Mobile First:** Optimized for phones with bottom tab navigation
-- **Desktop Layout:** Sidebar navigation with expanded content area
-- **Full-Screen:** Uses entire viewport for immersive experience
-- **Touch-Friendly:** Large targets and smooth interactions
-
-### 📋 Session Management
-- **Automatic Saving:** All sessions stored in browser localStorage
-- **Session History:** View past sessions with detailed breakdowns
-- **Expandable Details:** Tap sessions to see zone-by-zone performance
-- **Delete Sessions:** Remove sessions you don't want to keep
-
-## 🎨 Design & Branding
-
-- **NBA Color Palette:** Navy (#17408B), Red (#C9082A), Gold (#FDB927), Green (#00843D)
-- **Professional UI:** Clean, modern design with smooth animations
-- **Visual Hierarchy:** Clear stat cards, icons, and performance indicators
-- **Responsive Typography:** Scales beautifully across all screen sizes
-
-## 🛠 Technology Stack
-
-- **React 19** - UI framework
-- **Vite** - Fast build tool with HMR
-- **Lucide React** - Beautiful icons
-- **CSS3** - Responsive styling with media queries
-- **localStorage** - Persistent data storage
-
-## 🚀 Getting Started
-
-### Installation
+## Quick start
 
 ```bash
-# Clone the repository
 git clone https://github.com/Mnotice/hooptrack.git
 cd hooptrack
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173/`
+Open [http://localhost:5173](http://localhost:5173). For production: `npm run build` then deploy the `dist` folder.
 
-### Build for Production
+## Install on your phone (PWA)
 
-```bash
-npm run build
-```
+1. Open HoopTrack in **Safari** (iPhone/iPad) or **Chrome** (Android)
+2. Use **Add to Home Screen** / **Install app**
+3. Launch from your home screen like a native app
 
-## 📱 How to Use
+Works offline after the first load. Data stays on your device.
 
-1. **Start a Session:** The workout tab loads automatically with a new session
-2. **Select a Zone:** Tap any of the 5 court zones to select it
-3. **Log Your Shot:** 
-   - Tap **Make** (green) if you made the shot
-   - Tap **Miss** (red) if you missed
-4. **Track Progress:** Watch your stats update in real-time
-5. **View History:** Switch to the History tab to see all past sessions
-6. **Analyze Trends:** Check the Progress tab for weekly stats and heat maps
+## How to track a session
 
-## 📊 UI Sections
+1. Open **Workout**
+2. Tap a zone on the mini court (Top, Wings, Corners)
+3. Tap **Make** or **Miss** — you'll see a ball animation (swish, airball, or rebound)
+4. Tap **End Session** when done
 
-### Workout Tab
-- Live court diagram with clickable zones
-- Real-time shot counter
-- Make/Miss buttons with clear visual distinction
-- Session summary showing total shots and FG%
-- End Session button to save and start a new one
+**Voice (optional):** Tap the mic, say a zone ("left wing"), then "made" or "missed". Works best in Chrome or Edge. Not available in the iPhone installed app — use Safari in the browser or the buttons instead.
 
-### Progress Tab
-- Weekly shot volume with progress bars
-- Overall shooting percentage
-- Zone heat map with color-coded performance
-- Week-over-week comparison
+**Camera (optional):** The **Camera** tab can assist with rim calibration and shot suggestions. Fixed phone + good lighting works best.
 
-### History Tab
-- All past sessions sorted by most recent
-- Session type badges (Hot 🔥, Good ✓, Cold ❄️)
-- Expandable session details with zone breakdown
-- One-tap zone performance viewing
-- Delete option for each session
+## Tabs
 
-## 🎯 Features by Zone
+| Tab | What it does |
+|-----|----------------|
+| **Workout** | Log shots on the court |
+| **Camera** | Camera-assisted tracking (calibrate rim, confirm shots) |
+| **Progress** | Weekly FG%, zone heat map, trends |
+| **History** | Past sessions — expand for zone breakdown, delete if needed |
 
-Each zone displays:
-- **Makes/Attempts:** Current session statistics
-- **Shooting %:** Color-coded performance indicator
-- **Zone-Specific Stats:** Detailed breakdown in history and progress tabs
+Zones turn **green** (65%+), **yellow** (45–65%), or **red** (&lt;45%) based on your shooting.
 
-## 📱 Responsive Breakpoints
+## Your data
 
-| Device | Layout | Navigation |
-|--------|--------|------------|
-| Mobile (<768px) | Single column | Bottom tabs |
-| Tablet (768px-1024px) | Sidebar + Content | Sidebar nav |
-| Desktop (>1024px) | Optimized spacing | Sidebar nav |
+Everything saves in your browser (`localStorage`). Nothing is sent to a server. Clearing browser data removes your sessions.
 
-## 🔐 Data Storage
+## Voice cheat sheet
 
-All data is stored locally in your browser using `localStorage`:
-- Sessions persist even after closing the app
-- No cloud sync (for now) - data stays on your device
-- Clear your browser data to reset the app
+| Say | Does |
+|-----|------|
+| "left wing" / "top" / etc. | Select zone |
+| "made" / "missed" | Log shot (zone required) |
+| "made from right corner" | Zone + make in one phrase |
+| "what's my percentage?" | Hear current FG% |
 
-## 🎮 Controls
+See [VOICE_QUICK_REFERENCE.md](VOICE_QUICK_REFERENCE.md) for the full list.
 
-| Action | Mobile | Desktop |
-|--------|--------|---------|
-| Switch Tabs | Bottom tabs | Sidebar nav |
-| Select Zone | Tap zone area | Click zone area |
-| Log Shot | Make/Miss buttons | Make/Miss buttons |
-| View Session | Tap card | Click card |
-| End Session | End Session button | End Session button |
+## License
 
-## 🏆 Future Enhancements
-
-- Voice commands for hands-free logging
-- Cloud sync and user accounts
-- Advanced analytics and trend analysis
-- Comparison with other players
-- Video integration for shot analysis
-- Custom training programs
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👤 Author
-
-Created as a basketball training analytics tool. Contributions welcome!
-
----
-
-**HoopTrack** - Track Your Game, Improve Your Shot 🏀
+MIT — contributions welcome.

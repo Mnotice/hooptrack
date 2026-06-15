@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { getVoiceSupport } from '../utils/voiceSupport'
 
 const ZONES = [
   { id: 'top', aliases: ['top', 'key', 'topkey', 'top of key', 'top of the key', 'elbow', 'free throw line'] },
@@ -9,6 +10,25 @@ const ZONES = [
 ]
 
 const FILLER_WORDS = ['um', 'uh', 'like', 'you know', 'basically', 'literally', 'actually', 'okay', 'yeah', 'yes', 'no']
+
+function safeStart(recognition) {
+  if (!recognition) return false
+  try {
+    recognition.start()
+    return true
+  } catch {
+    return false
+  }
+}
+
+function safeStop(recognition) {
+  if (!recognition) return
+  try {
+    recognition.stop()
+  } catch {
+    // already stopped
+  }
+}
 
 export const useVoiceCommands = ({
   onMake,
@@ -21,11 +41,13 @@ export const useVoiceCommands = ({
   onGetPercentage,
   onGetShotCount,
   onGetStreak,
+  onGetSelectedZone,
   onError,
 }) => {
   const recognitionRef = useRef(null)
+  const wantsListeningRef = useRef(false)
   const [isListening, setIsListening] = useState(false)
-  const [isSupported, setIsSupported] = useState(false)
+  const [voiceSupport] = useState(() => getVoiceSupport())
   const [transcript, setTranscript] = useState('')
   const [interimTranscript, setInterimTranscript] = useState('')
   const [feedback, setFeedback] = useState('')
@@ -41,6 +63,7 @@ export const useVoiceCommands = ({
   const onGetPercentageRef = useRef(onGetPercentage)
   const onGetShotCountRef = useRef(onGetShotCount)
   const onGetStreakRef = useRef(onGetStreak)
+  const onGetSelectedZoneRef = useRef(onGetSelectedZone)
   const onErrorRef = useRef(onError)
 
   useEffect(() => {
@@ -54,12 +77,13 @@ export const useVoiceCommands = ({
     onGetPercentageRef.current = onGetPercentage
     onGetShotCountRef.current = onGetShotCount
     onGetStreakRef.current = onGetStreak
+    onGetSelectedZoneRef.current = onGetSelectedZone
     onErrorRef.current = onError
-  }, [onMake, onMiss, onZoneChange, onStartSession, onEndSession, onPause, onResume, onGetPercentage, onGetShotCount, onGetStreak, onError])
+  }, [onMake, onMiss, onZoneChange, onStartSession, onEndSession, onPause, onResume, onGetPercentage, onGetShotCount, onGetStreak, onGetSelectedZone, onError])
 
   const cleanText = useCallback((text) => {
     let cleaned = text.toLowerCase().trim()
-    FILLER_WORDS.forEach(word => {
+    FILLER_WORDS.forEach((word) => {
       cleaned = cleaned.replace(new RegExp(`\\b${word}\\b`, 'gi'), ' ')
     })
     return cleaned.replace(/\s+/g, ' ').trim()
@@ -80,12 +104,16 @@ export const useVoiceCommands = ({
   const parseCount = useCallback((text) => {
     const match = text.match(/(\d+)\s*(?:of|out of|\/)\s*(\d+)/)
     if (match) {
-      const makes = parseInt(match[1])
-      const total = parseInt(match[2])
+      const makes = parseInt(match[1], 10)
+      const total = parseInt(match[2], 10)
       const misses = total - makes
       return { makes, misses }
     }
     return null
+  }, [])
+
+  const resolveZone = useCallback((parsedZone) => {
+    return parsedZone || onGetSelectedZoneRef.current?.() || null
   }, [])
 
   const playSound = useCallback((type) => {
@@ -136,7 +164,7 @@ export const useVoiceCommands = ({
       setFeedback('✓ Starting new session')
       playSound('success')
       onStartSessionRef.current?.()
-      setTimeout(() => setStatus('idle'), 1000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
@@ -144,7 +172,7 @@ export const useVoiceCommands = ({
       setFeedback('✓ Session ended')
       playSound('success')
       onEndSessionRef.current?.()
-      setTimeout(() => setStatus('idle'), 1000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
@@ -152,7 +180,7 @@ export const useVoiceCommands = ({
       setFeedback('⏸ Paused')
       playSound('success')
       onPauseRef.current?.()
-      setTimeout(() => setStatus('idle'), 1000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
@@ -160,7 +188,7 @@ export const useVoiceCommands = ({
       setFeedback('▶ Resumed')
       playSound('success')
       onResumeRef.current?.()
-      setTimeout(() => setStatus('idle'), 1000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
@@ -168,7 +196,7 @@ export const useVoiceCommands = ({
       const percentage = onGetPercentageRef.current?.()
       setFeedback(`📊 ${percentage}%`)
       playSound('success')
-      setTimeout(() => setStatus('idle'), 2000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 2000)
       return
     }
 
@@ -176,7 +204,7 @@ export const useVoiceCommands = ({
       const count = onGetShotCountRef.current?.()
       setFeedback(`🏀 ${count} shots`)
       playSound('success')
-      setTimeout(() => setStatus('idle'), 2000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 2000)
       return
     }
 
@@ -184,16 +212,16 @@ export const useVoiceCommands = ({
       const streak = onGetStreakRef.current?.()
       setFeedback(`🔥 ${streak} in a row`)
       playSound('success')
-      setTimeout(() => setStatus('idle'), 2000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 2000)
       return
     }
 
-    const zone = parseZone(command)
-    if (zone && !cleanedCommand.includes('made') && !cleanedCommand.includes('miss')) {
-      setFeedback(`📍 ${zone.replace('-', ' ').toUpperCase()}`)
+    const parsedZone = parseZone(command)
+    if (parsedZone && !cleanedCommand.includes('made') && !cleanedCommand.includes('miss')) {
+      setFeedback(`📍 ${parsedZone.replace('-', ' ').toUpperCase()}`)
       playSound('success')
-      onZoneChangeRef.current?.(zone)
-      setTimeout(() => setStatus('idle'), 1000)
+      onZoneChangeRef.current?.(parsedZone)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
@@ -201,8 +229,23 @@ export const useVoiceCommands = ({
     const isMiss = cleanedCommand.includes('miss') || cleanedCommand.includes('missed')
 
     if (isMake || isMiss) {
+      const zone = resolveZone(parsedZone)
       const countInfo = parseCount(command)
+
+      if (!zone && !countInfo) {
+        setFeedback('📍 Select a zone first — tap the court or say "left wing"')
+        playSound('error')
+        setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 2000)
+        return
+      }
+
       if (countInfo) {
+        if (!zone) {
+          setFeedback('📍 Say a zone with your count, e.g. "made 7 of 10 from top"')
+          playSound('error')
+          setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 2000)
+          return
+        }
         for (let i = 0; i < countInfo.makes; i++) {
           onMakeRef.current?.(zone)
         }
@@ -211,36 +254,41 @@ export const useVoiceCommands = ({
         }
         setFeedback(`✓ Logged ${countInfo.makes}/${countInfo.makes + countInfo.misses}`)
         playSound('success')
-        setTimeout(() => setStatus('idle'), 1000)
+        setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
         return
       }
 
       if (isMake) {
         onMakeRef.current?.(zone)
-        setFeedback(`✓ Made${zone ? ` from ${zone.replace('-', ' ')}` : ''}`)
+        setFeedback(`✓ Made from ${zone.replace('-', ' ')}`)
       } else {
         onMissRef.current?.(zone)
-        setFeedback(`✗ Missed${zone ? ` from ${zone.replace('-', ' ')}` : ''}`)
+        setFeedback(`✗ Missed from ${zone.replace('-', ' ')}`)
       }
 
       playSound('success')
-      setTimeout(() => setStatus('idle'), 1000)
+      setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1000)
       return
     }
 
     setFeedback('❓ Command not recognized')
     playSound('error')
-    setTimeout(() => setStatus('idle'), 1500)
-  }, [cleanText, parseZone, parseCount, playSound])
+    setTimeout(() => setStatus(wantsListeningRef.current ? 'listening' : 'idle'), 1500)
+  }, [cleanText, parseZone, parseCount, resolveZone, playSound])
+
+  const restartListening = useCallback(() => {
+    if (!wantsListeningRef.current || !recognitionRef.current) return
+    const started = safeStart(recognitionRef.current)
+    if (started) {
+      setIsListening(true)
+      setStatus('listening')
+    }
+  }, [])
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SpeechRecognition) {
-      setIsSupported(false)
-      return
-    }
+    if (!voiceSupport.supported) return undefined
 
-    setIsSupported(true)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     const recognition = new SpeechRecognition()
     recognitionRef.current = recognition
 
@@ -269,54 +317,77 @@ export const useVoiceCommands = ({
     }
 
     recognition.onerror = (event) => {
+      if (event.error === 'no-speech' || event.error === 'aborted') {
+        if (wantsListeningRef.current) {
+          restartListening()
+        }
+        return
+      }
+
+      if (event.error === 'not-allowed') {
+        wantsListeningRef.current = false
+      }
+
       setStatus('error')
-      setFeedback(`❌ ${event.error}`)
+      setFeedback(`❌ Microphone ${event.error === 'not-allowed' ? 'permission denied' : event.error}`)
       onErrorRef.current?.(event.error)
       setTimeout(() => {
         setStatus('idle')
-        setFeedback('')
-      }, 2000)
+        if (event.error !== 'not-allowed') setFeedback('')
+      }, 2500)
     }
 
     recognition.onend = () => {
-      setIsListening(false)
-      setStatus('idle')
+      if (wantsListeningRef.current) {
+        setTimeout(() => restartListening(), 200)
+      } else {
+        setIsListening(false)
+        setStatus('idle')
+      }
     }
 
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop()
-      }
+      wantsListeningRef.current = false
+      safeStop(recognition)
     }
-  }, [handleCommand])
+  }, [voiceSupport.supported, handleCommand, restartListening])
 
   const toggleListening = useCallback(() => {
-    if (!recognitionRef.current) return
+    if (!recognitionRef.current || !voiceSupport.supported) return
 
-    if (isListening) {
-      recognitionRef.current.stop()
+    if (isListening || wantsListeningRef.current) {
+      wantsListeningRef.current = false
+      safeStop(recognitionRef.current)
       setIsListening(false)
       setStatus('idle')
-    } else {
-      setTranscript('')
-      setInterimTranscript('')
-      setFeedback('')
-      setStatus('listening')
-      recognitionRef.current.start()
-      setIsListening(true)
+      return
     }
-  }, [isListening])
+
+    setTranscript('')
+    setInterimTranscript('')
+    setFeedback('')
+    wantsListeningRef.current = true
+    setStatus('listening')
+
+    const started = safeStart(recognitionRef.current)
+    setIsListening(started)
+    if (!started) {
+      wantsListeningRef.current = false
+      setStatus('error')
+      setFeedback('❌ Could not start microphone — tap to try again')
+    }
+  }, [isListening, voiceSupport.supported])
 
   const stopListening = useCallback(() => {
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop()
-      setIsListening(false)
-      setStatus('idle')
-    }
-  }, [isListening])
+    wantsListeningRef.current = false
+    safeStop(recognitionRef.current)
+    setIsListening(false)
+    setStatus('idle')
+  }, [])
 
   return {
-    isSupported,
+    voiceSupport,
+    isSupported: voiceSupport.supported,
     isListening,
     transcript,
     interimTranscript,

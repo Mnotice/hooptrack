@@ -80,10 +80,18 @@ The microphone button displays different states:
 
 ### 🛡️ Browser Compatibility
 
-- **Supported**: Chrome, Edge, Safari, Firefox (most modern browsers)
-- **Fallback**: If Web Speech API not supported, voice button is hidden automatically
-- **Permission**: Browser will request microphone permission on first use
-- **Privacy**: No audio is recorded or stored - recognition happens locally
+| Platform | Voice support |
+|----------|---------------|
+| Chrome / Edge (desktop, Android) | ✅ Full — tap to speak, stays listening |
+| Safari (macOS) | ✅ Supported |
+| Safari (iPhone/iPad, in browser) | ⚠️ Limited — may need to tap again after silence |
+| Installed PWA (iPhone/iPad) | ❌ Not available — open in Safari instead |
+| Firefox | ❌ Not supported |
+
+- **Unsupported browsers**: A clear "Voice unavailable" message is shown instead of hiding the control
+- **Zone required**: Say a zone first (e.g. "left wing") or tap the court before "made" / "missed"
+- **Permission**: Browser requests microphone access on first tap
+- **Privacy**: No audio is recorded or stored — recognition happens locally in the browser
 
 ---
 

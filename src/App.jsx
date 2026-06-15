@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import WorkoutTab from './components/WorkoutTab'
+import CameraTab from './components/CameraTab'
 import ProgressTab from './components/ProgressTab'
 import HistoryTab from './components/HistoryTab'
-import { Dumbbell, BarChart3, History } from 'lucide-react'
+import { Dumbbell, BarChart3, History, Camera } from 'lucide-react'
+import { createShot } from './utils/shotTypes'
 
 function App() {
   const [activeTab, setActiveTab] = useState('workout')
@@ -32,9 +34,10 @@ function App() {
   }, [sessions])
 
   const handleAddShot = (shot) => {
+    const normalizedShot = shot.timestamp ? shot : createShot(shot)
     setCurrentSession(prev => ({
       ...prev,
-      shots: [...prev.shots, shot]
+      shots: [...prev.shots, normalizedShot]
     }))
   }
 
@@ -75,6 +78,14 @@ function App() {
               <span>Workout</span>
             </button>
             <button
+              className={`nav-item ${activeTab === 'camera' ? 'active' : ''}`}
+              onClick={() => setActiveTab('camera')}
+              title="Camera"
+            >
+              <Camera size={24} />
+              <span>Camera</span>
+            </button>
+            <button
               className={`nav-item ${activeTab === 'progress' ? 'active' : ''}`}
               onClick={() => setActiveTab('progress')}
               title="Progress"
@@ -103,6 +114,12 @@ function App() {
                 Workout
               </button>
               <button
+                className={`tab ${activeTab === 'camera' ? 'active' : ''}`}
+                onClick={() => setActiveTab('camera')}
+              >
+                Camera
+              </button>
+              <button
                 className={`tab ${activeTab === 'progress' ? 'active' : ''}`}
                 onClick={() => setActiveTab('progress')}
               >
@@ -119,6 +136,13 @@ function App() {
             <div className="content">
               {activeTab === 'workout' && (
                 <WorkoutTab
+                  currentSession={currentSession}
+                  onAddShot={handleAddShot}
+                  onEndSession={handleEndSession}
+                />
+              )}
+              {activeTab === 'camera' && (
+                <CameraTab
                   currentSession={currentSession}
                   onAddShot={handleAddShot}
                   onEndSession={handleEndSession}

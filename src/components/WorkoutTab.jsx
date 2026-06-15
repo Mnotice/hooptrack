@@ -1,115 +1,102 @@
 import { useState } from 'react'
 import Court from './Court'
 import VoiceControl from './VoiceControl'
-import { Target, Flame, BarChart3 } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import '../styles/WorkoutTab.css'
 
 export default function WorkoutTab({ currentSession, onAddShot, onEndSession }) {
   const [selectedZone, setSelectedZone] = useState(null)
+  const [shotAnimation, setShotAnimation] = useState(null)
 
-  const handleMakeShot = () => {
-    onAddShot({ result: 'make', zone: selectedZone, timestamp: Date.now() })
+  const logShot = (result, zone) => {
+    if (!zone) return
+    const timestamp = Date.now()
+    onAddShot({ result, zone, timestamp })
+    setShotAnimation({ result, zone, key: timestamp })
     setSelectedZone(null)
   }
 
-  const handleMissShot = () => {
-    onAddShot({ result: 'miss', zone: selectedZone, timestamp: Date.now() })
-    setSelectedZone(null)
+  const handleMakeShot = () => logShot('make', selectedZone)
+  const handleMissShot = () => logShot('miss', selectedZone)
+
+  const handleVoiceAddShot = (shot) => {
+    onAddShot(shot)
+    if (shot.zone) {
+      setShotAnimation({ result: shot.result, zone: shot.zone, key: shot.timestamp || Date.now() })
+    }
   }
 
-  const makes = currentSession.shots.filter(s => s.result === 'make').length
-  const misses = currentSession.shots.filter(s => s.result === 'miss').length
+  const makes = currentSession.shots.filter((s) => s.result === 'make').length
+  const misses = currentSession.shots.filter((s) => s.result === 'miss').length
   const total = makes + misses
   const percentage = total > 0 ? Math.round((makes / total) * 100) : 0
 
   return (
     <div className="workout-container">
-      <div className="workout-header">
-        <div className="workout-title">Today's Workout</div>
-        <div className="workout-stats">
-          <div className="stat">
-            <span>Makes: {makes}</span>
-          </div>
-          <div className="stat">
-            <span>Misses: {misses}</span>
-          </div>
-          <div className="stat">
-            <span>FG%: {percentage}%</span>
-          </div>
+      <div className="workout-stats-bar">
+        <div className="workout-stat">
+          <span className="workout-stat-value makes">{makes}</span>
+          <span className="workout-stat-label">Makes</span>
+        </div>
+        <div className="workout-stat">
+          <span className="workout-stat-value misses">{misses}</span>
+          <span className="workout-stat-label">Misses</span>
+        </div>
+        <div className="workout-stat">
+          <span className="workout-stat-value">{percentage}%</span>
+          <span className="workout-stat-label">FG%</span>
+        </div>
+        <div className="workout-stat">
+          <span className="workout-stat-value">{total}</span>
+          <span className="workout-stat-label">Shots</span>
         </div>
       </div>
 
-      <Court 
+      <Court
         selectedZone={selectedZone}
         onZoneSelect={setSelectedZone}
         shots={currentSession.shots}
+        shotAnimation={shotAnimation}
       />
 
-      <VoiceControl
-        selectedZone={selectedZone}
-        onZoneSelect={setSelectedZone}
-        currentSession={currentSession}
-        onAddShot={onAddShot}
-        onEndSession={onEndSession}
-      />
+      <div className="workout-actions">
+        <VoiceControl
+          selectedZone={selectedZone}
+          onZoneSelect={setSelectedZone}
+          currentSession={currentSession}
+          onAddShot={handleVoiceAddShot}
+          onEndSession={onEndSession}
+        />
 
-      <div className="shot-buttons">
-        <button 
-          className="shot-btn shot-btn-make"
-          onClick={handleMakeShot}
-          disabled={!selectedZone}
-        >
-          <span className="shot-count">✓</span>
-          Make
-        </button>
-        <button 
-          className="shot-btn shot-btn-miss"
-          onClick={handleMissShot}
-          disabled={!selectedZone}
-        >
-          <span className="shot-count">✗</span>
-          Miss
-        </button>
-      </div>
-
-      <div className="session-summary">
-        <div className="stat-card">
-          <div className="stat-icon makes-icon">
-            <Target size={28} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-number">{makes}</div>
-            <div className="stat-label">Makes</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon flames-icon">
-            <Flame size={28} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-number">{percentage}</div>
-            <div className="stat-label">FG%</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon shots-icon">
-            <BarChart3 size={28} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-number">{total}</div>
-            <div className="stat-label">Total</div>
-          </div>
+        <div className="shot-buttons">
+          <button
+            type="button"
+            className="shot-btn shot-btn-make"
+            onClick={handleMakeShot}
+            disabled={!selectedZone}
+          >
+            <Check size={22} strokeWidth={3} />
+            Make
+          </button>
+          <button
+            type="button"
+            className="shot-btn shot-btn-miss"
+            onClick={handleMissShot}
+            disabled={!selectedZone}
+          >
+            <X size={22} strokeWidth={3} />
+            Miss
+          </button>
         </div>
       </div>
 
-      <button 
+      <button
+        type="button"
         className="end-session-btn"
         onClick={onEndSession}
         disabled={total === 0}
       >
-        End Session & Save
+        End Session
       </button>
     </div>
   )

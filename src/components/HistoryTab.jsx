@@ -143,6 +143,12 @@ export default function HistoryTab({ sessions, onDeleteSession }) {
                         <span className="stat-row-label">Field Goal %</span>
                         <span className="stat-row-value percentage">{stats.percentage}%</span>
                       </div>
+                      {session.shots.some(s => s.source === 'camera') && (
+                        <div className="stat-row">
+                          <span className="stat-row-label">Camera Shots</span>
+                          <span className="stat-row-value">{session.shots.filter(s => s.source === 'camera').length}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Zone Breakdown */}

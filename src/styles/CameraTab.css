@@ -1,0 +1,394 @@
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.camera-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.camera-session-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-weight: 700;
+  color: var(--nba-navy);
+  font-size: 18px;
+}
+
+.phase-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.phase-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #f3f5f9;
+  color: #888;
+  min-width: 72px;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}
+
+.phase-pill.active {
+  background: rgba(23, 64, 139, 0.08);
+  color: var(--nba-navy);
+}
+
+.phase-pill.current {
+  border-color: var(--nba-navy);
+}
+
+.phase-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.camera-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fff8e6;
+  color: #8a6d00;
+  font-size: 14px;
+}
+
+.camera-alert.error {
+  background: #ffecef;
+  color: #b42318;
+}
+
+.camera-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #0d1b33;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.camera-video.visible {
+  opacity: 1;
+}
+
+.camera-canvas {
+  display: none;
+}
+
+.camera-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: white;
+  text-align: center;
+  padding: 24px;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+}
+
+.rim-target {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(253, 185, 39, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fdb927;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.rim-target.calibrating {
+  pointer-events: auto;
+  cursor: grab;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+}
+
+.rim-target.locked {
+  border-color: rgba(0, 132, 61, 0.9);
+  color: #00843d;
+}
+
+.rim-resize-handle {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--nba-gold);
+  border: 2px solid white;
+  pointer-events: auto;
+  cursor: nwse-resize;
+}
+
+.live-metrics {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.live-metrics span {
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.camera-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.camera-primary-btn,
+.camera-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.camera-primary-btn {
+  background: linear-gradient(135deg, var(--nba-navy), #0d2852);
+  color: white;
+}
+
+.camera-secondary-btn {
+  background: #eef2f8;
+  color: var(--nba-navy);
+}
+
+.calibration-hint {
+  padding: 12px 14px;
+  background: #eef6ff;
+  border-radius: 10px;
+  color: #355070;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.shot-suggestion {
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(23, 64, 139, 0.08), rgba(253, 185, 39, 0.12));
+  border: 1px solid rgba(23, 64, 139, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestion-main {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: var(--nba-navy);
+}
+
+.suggestion-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.suggestion-confidence {
+  margin-left: 8px;
+  font-size: 14px;
+  color: var(--nba-green);
+}
+
+.suggestion-meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+  text-transform: capitalize;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.confirm-make,
+.confirm-miss,
+.confirm-dismiss {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.confirm-make {
+  background: var(--nba-green);
+  color: white;
+}
+
+.confirm-miss {
+  background: var(--nba-red);
+  color: white;
+}
+
+.confirm-dismiss {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.manual-fallback {
+  padding: 14px;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.manual-fallback p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.zone-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.zone-chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #ddd;
+  color: #555;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.zone-chip.selected {
+  background: var(--nba-navy);
+  color: white;
+  border-color: var(--nba-navy);
+}
+
+.manual-shot-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.manual-make,
+.manual-miss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+
+.manual-make {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.manual-miss {
+  background: linear-gradient(135deg, #eb3349, #f45c43);
+}
+
+.manual-make:disabled,
+.manual-miss:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.camera-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.camera-summary .stat-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f7f9fc;
+}
+
+.camera-summary .stat-number {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--nba-navy);
+}
+
+.camera-summary .stat-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.camera-status {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+@media (min-width: 768px) {
+  .camera-viewport {
+    aspect-ratio: 16 / 9;
+    max-height: 420px;
+  }
+}

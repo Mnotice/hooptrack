@@ -1,4 +1,4 @@
-import { Mic } from 'lucide-react'
+import { Mic, MicOff, AlertCircle } from 'lucide-react'
 import { useVoiceCommands } from '../hooks/useVoiceCommands'
 import '../styles/VoiceControl.css'
 
@@ -11,41 +11,34 @@ export default function VoiceControl({
 }) {
   const voice = useVoiceCommands({
     onMake: (zone) => {
-      onAddShot({ result: 'make', zone: zone || selectedZone, timestamp: Date.now() })
+      onAddShot({ result: 'make', zone, timestamp: Date.now(), source: 'voice' })
     },
     onMiss: (zone) => {
-      onAddShot({ result: 'miss', zone: zone || selectedZone, timestamp: Date.now() })
+      onAddShot({ result: 'miss', zone, timestamp: Date.now(), source: 'voice' })
     },
     onZoneChange: (zone) => {
       onZoneSelect(zone)
     },
-    onStartSession: () => {
-      // New session already started in App
-    },
+    onGetSelectedZone: () => selectedZone,
+    onStartSession: () => {},
     onEndSession: () => {
       onEndSession?.()
     },
-    onPause: () => {
-      // Pause functionality can be added to App state
-    },
-    onResume: () => {
-      // Resume functionality can be added to App state
-    },
+    onPause: () => {},
+    onResume: () => {},
     onGetPercentage: () => {
-      const makes = currentSession.shots.filter(s => s.result === 'make').length
+      const makes = currentSession.shots.filter((s) => s.result === 'make').length
       const total = currentSession.shots.length
       return total > 0 ? Math.round((makes / total) * 100) : 0
     },
-    onGetShotCount: () => {
-      return currentSession.shots.length
-    },
+    onGetShotCount: () => currentSession.shots.length,
     onGetStreak: () => {
       const shots = currentSession.shots
       if (!shots || shots.length === 0) return 0
-      
+
       let streak = 0
       const lastResult = shots[shots.length - 1]?.result
-      
+
       for (let i = shots.length - 1; i >= 0; i--) {
         if (shots[i].result === lastResult) {
           streak++
@@ -60,8 +53,20 @@ export default function VoiceControl({
     },
   })
 
-  if (!voice.isSupported) {
-    return null
+  const { voiceSupport } = voice
+
+  if (!voiceSupport.supported) {
+    return (
+      <div className="voice-control voice-control-unsupported">
+        <div className="voice-unsupported-banner">
+          <MicOff size={18} />
+          <div>
+            <p className="voice-unsupported-title">Voice unavailable</p>
+            <p className="voice-unsupported-text">{voiceSupport.message}</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const getStatusClass = () => {
@@ -84,7 +89,7 @@ export default function VoiceControl({
       case 'processing':
         return 'Processing...'
       case 'error':
-        return 'Error'
+        return 'Mic error'
       default:
         return voice.isListening ? 'Listening' : 'Tap to speak'
     }
@@ -92,14 +97,23 @@ export default function VoiceControl({
 
   return (
     <div className="voice-control">
+      {voiceSupport.limited && (
+        <div className="voice-limited-banner">
+          <AlertCircle size={16} />
+          <span>{voiceSupport.message}</span>
+        </div>
+      )}
+
       <button
+        type="button"
         className={`voice-btn ${getStatusClass()}`}
         onClick={voice.toggleListening}
         title={getStatusText()}
+        aria-pressed={voice.isListening}
       >
         <Mic size={20} />
         <span className="voice-btn-text">{getStatusText()}</span>
-        {voice.isListening && <span className="voice-pulse"></span>}
+        {voice.isListening && <span className="voice-pulse" />}
       </button>
 
       {voice.feedback && (
