@@ -3,6 +3,32 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Free basketball shot tracker PWA for practice sessions. Log makes and misses by court zone with optional camera assistance and voice commands. Privacy-first local storage, installable on mobile devices.",
+  "author": {
+    "name": "Mikhail",
+    "url": "https://github.com/Mnotice"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mnotice/hooptrack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mnotice/hooptrack/issues"
+  },
+  "homepage": "https://github.com/Mnotice/hooptrack#readme",
+  "keywords": [
+    "basketball",
+    "shot-tracker",
+    "pwa",
+    "react",
+    "sports",
+    "fitness",
+    "voice-control",
+    "camera",
+    "localstorage",
+    "offline"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
