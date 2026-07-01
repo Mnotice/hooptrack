@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: 8px;
   margin: 0;
+  width: 100%;
 }
 
 .voice-unsupported-banner,

@@ -385,6 +385,40 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Desktop */
+@media (min-width: 1024px) {
+  .history-container {
+    max-width: 1000px;
+    padding: 0;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .session-header {
+    padding: 1.25rem 1.75rem;
+  }
+
+  .detailed-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .history-footer {
+    padding: 2rem;
+  }
+
+  .footer-value {
+    font-size: 1.75rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .history-container {
+    max-width: 1140px;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .history-container {

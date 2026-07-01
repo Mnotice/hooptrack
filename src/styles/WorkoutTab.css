@@ -122,3 +122,77 @@
     font-size: 24px;
   }
 }
+
+/* Desktop: side-by-side court + controls */
+@media (min-width: 900px) {
+  .workout-container {
+    display: grid;
+    grid-template-areas:
+      "stats stats"
+      "court actions"
+      "end end";
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    align-items: start;
+    gap: 24px 32px;
+    max-width: 1140px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .workout-stats-bar {
+    grid-area: stats;
+    max-width: none;
+    padding: 16px 24px;
+    border-radius: 16px;
+  }
+
+  .workout-container > .court-container {
+    grid-area: court;
+    justify-self: center;
+    width: 100%;
+  }
+
+  .workout-actions {
+    grid-area: actions;
+    max-width: none;
+    position: sticky;
+    top: 24px;
+  }
+
+  .end-session-btn {
+    grid-area: end;
+    max-width: none;
+    padding: 16px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .workout-stat-value {
+    font-size: 28px;
+  }
+
+  .workout-stat-label {
+    font-size: 11px;
+  }
+
+  .shot-btn {
+    padding: 16px 14px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .workout-container {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 28px 40px;
+    max-width: 1280px;
+  }
+
+  .workout-stats-bar {
+    padding: 18px 28px;
+  }
+
+  .workout-stat-value {
+    font-size: 32px;
+  }
+}

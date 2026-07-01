@@ -530,7 +530,7 @@
 
 @media (min-width: 768px) {
   .court {
-    width: 300px;
+    width: min(42vw, 340px);
   }
 
   .hoop-backboard {
@@ -558,6 +558,96 @@
   }
 
   .court-selection {
-    width: 300px;
+    width: min(42vw, 340px);
+  }
+}
+
+@media (min-width: 900px) {
+  .court {
+    width: min(38vw, 440px);
+  }
+
+  .court-hint {
+    font-size: 13px;
+  }
+
+  .hoop-backboard {
+    width: 68px;
+    height: 46px;
+  }
+
+  .hoop-rim-ring {
+    width: 40px;
+    height: 40px;
+    border-width: 5px;
+  }
+
+  .hoop-net {
+    width: 36px;
+    height: 24px;
+  }
+
+  .court-zone-name {
+    font-size: 12px;
+  }
+
+  .court-zone-stat {
+    font-size: 14px;
+  }
+
+  .court-zone-pct {
+    font-size: 10px;
+  }
+
+  .court-selection {
+    width: min(38vw, 440px);
+    padding: 8px 18px;
+  }
+
+  .court-selection-label {
+    font-size: 14px;
+  }
+
+  .shot-ball {
+    width: 15px;
+    height: 15px;
+  }
+
+  .shot-label {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .court {
+    width: min(32vw, 520px);
+  }
+
+  .hoop-backboard {
+    width: 78px;
+    height: 52px;
+  }
+
+  .hoop-rim-ring {
+    width: 46px;
+    height: 46px;
+    border-width: 5.5px;
+  }
+
+  .hoop-net {
+    width: 42px;
+    height: 28px;
+  }
+
+  .court-zone-name {
+    font-size: 13px;
+  }
+
+  .court-zone-stat {
+    font-size: 15px;
+  }
+
+  .court-selection {
+    width: min(32vw, 520px);
   }
 }

@@ -371,6 +371,53 @@
   color: #667eea;
 }
 
+/* Desktop */
+@media (min-width: 1024px) {
+  .progress-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .overall-stats {
+    gap: 20px;
+  }
+
+  .stat-card.large {
+    padding: 28px;
+  }
+
+  .stat-card.large .stat-value {
+    font-size: 56px;
+  }
+
+  .week-section,
+  .zone-heatmap-section,
+  .week-comparison {
+    padding: 24px;
+  }
+
+  .heatmap-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+
+  .comparison-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .comparison-value {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .progress-container {
+    max-width: 1280px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .progress-container {
